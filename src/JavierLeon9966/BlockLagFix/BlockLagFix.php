@@ -53,7 +53,7 @@ final class BlockLagFix extends PluginBase{
 				return true;
 			}
 			$blockHash = World::blockHash($packet->blockPosition->getX(), $packet->blockPosition->getY(), $packet->blockPosition->getZ());
-			if(RuntimeBlockMapping::getInstance()->fromRuntimeId($packet->blockRuntimeId) !== ($this->oldBlocksFullId[$blockHash] ?? null)){
+			if(RuntimeBlockMapping::getInstance()->fromRuntimeId($packet->blockRuntimeId, RuntimeBlockMapping::getMappingProtocol($target->getProtocolId())) !== ($this->oldBlocksFullId[$blockHash] ?? null)){
 				return true;
 			}
 			unset($this->oldBlocksFullId[$blockHash]);
