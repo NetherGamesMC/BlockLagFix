@@ -135,6 +135,7 @@ final class BlockLagFix extends PluginBase{
 		$clickVector = $event->getTouchVector();
 
 		$hand = $item->getBlock($face);
+		// @phpstan-ignore-next-line
 		$hand->position($world, $blockReplace->getPosition()->x, $blockReplace->getPosition()->y, $blockReplace->getPosition()->z);
 
 		if($blockClicked->getTypeId() !== VanillaBlocks::AIR()->getTypeId() && $hand->canBePlacedAt($blockClicked, $clickVector, $face, true)) {
@@ -143,6 +144,7 @@ final class BlockLagFix extends PluginBase{
 			//value like NULL and let place() deal with it. This will look like a bug to anyone who doesn't know about
 			//the vanilla behaviour.
 			$face = Facing::UP;
+			// @phpstan-ignore-next-line
 			$hand->position($world, $blockReplace->getPosition()->x, $blockReplace->getPosition()->y, $blockReplace->getPosition()->z);
 		}
 
@@ -153,7 +155,7 @@ final class BlockLagFix extends PluginBase{
 
         // TODO: this is a hack to prevent block placement when another entity is inside, since this caused ghost blocks
 		foreach($tx->getBlocks() as [$x, $y, $z, $block]){
-			$block->position($this, $x, $y, $z);
+			$block->position($world, $x, $y, $z);
 			foreach($block->getCollisionBoxes() as $collisionBox){
 				if(count($collidingEntities = $world->getCollidingEntities($collisionBox)) > 0){
 					if ($collidingEntities !== [$player]){
