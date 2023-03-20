@@ -50,7 +50,7 @@ final class BlockLagFix extends PluginBase{
 	private array $oldTilesSerializedCompound = [];
 
 	public function onEnable(): void{
-		$this->handler = SimplePacketHandler::createInterceptor($this, EventPriority::MONITOR);
+		$this->handler = SimplePacketHandler::createInterceptor($this, EventPriority::HIGHEST);
 
 		$this->handleUpdateBlock = function(UpdateBlockPacket $packet, NetworkSession $target): bool{
 			if($target->getPlayer() !== $this->lastPlayer){
