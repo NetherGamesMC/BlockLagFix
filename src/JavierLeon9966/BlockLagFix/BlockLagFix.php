@@ -138,7 +138,7 @@ final class BlockLagFix extends PluginBase{
 		// @phpstan-ignore-next-line
 		$hand->position($world, $blockReplace->getPosition()->x, $blockReplace->getPosition()->y, $blockReplace->getPosition()->z);
 
-		if($blockClicked->getTypeId() !== VanillaBlocks::AIR()->getTypeId() && $hand->canBePlacedAt($blockClicked, $clickVector, $face, true)) {
+		if($hand->canBePlacedAt($blockClicked, $clickVector, $face, true)) {
 			$blockReplace = $blockClicked;
 			//TODO: while this mimics the vanilla behaviour with replaceable blocks, we should really pass some other
 			//value like NULL and let place() deal with it. This will look like a bug to anyone who doesn't know about
