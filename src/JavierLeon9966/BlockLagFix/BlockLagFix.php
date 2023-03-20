@@ -9,9 +9,11 @@ use muqsit\simplepackethandler\SimplePacketHandler;
 
 use pocketmine\block\Block;
 use pocketmine\block\tile\Spawnable;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\EventPriority;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\math\Facing;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
 use pocketmine\network\mcpe\NetworkSession;
@@ -20,7 +22,9 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\world\BlockTransaction;
 use pocketmine\world\World;
+use function count;
 
 final class BlockLagFix extends PluginBase{
 
@@ -46,7 +50,7 @@ final class BlockLagFix extends PluginBase{
 	private array $oldTilesSerializedCompound = [];
 
 	public function onEnable(): void{
-		$this->handler = SimplePacketHandler::createInterceptor($this, EventPriority::HIGHEST);
+		$this->handler = SimplePacketHandler::createInterceptor($this, EventPriority::MONITOR);
 
 		$this->handleUpdateBlock = function(UpdateBlockPacket $packet, NetworkSession $target): bool{
 			if($target->getPlayer() !== $this->lastPlayer){
@@ -83,9 +87,11 @@ final class BlockLagFix extends PluginBase{
 			return false;
 		};
 		$this->getServer()->getPluginManager()->registerEvent(PlayerInteractEvent::class, function(PlayerInteractEvent $event): void{
-			if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK || !$event->getItem()->canBePlaced()){
+			$item = $event->getItem();
+			if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK || $item->isNull() || !$item->canBePlaced() || $this->hasOtherEntityInside($event)){
 				return;
 			}
+
 			$this->lastPlayer = $event->getPlayer();
 			$clickedBlock = $event->getBlock();
 			$replaceBlock = $clickedBlock->getSide($event->getFace());
@@ -117,4 +123,46 @@ final class BlockLagFix extends PluginBase{
 			$this->handler->unregisterOutgoingInterceptor($this->handleBlockActorData);
 		}, EventPriority::MONITOR, $this, true);
 	}
+
+    private function hasOtherEntityInside(PlayerInteractEvent $event): bool
+    {
+		$item = $event->getItem();
+		$face = $event->getFace();
+		$blockClicked = $event->getBlock();
+		$blockReplace = $blockClicked->getSide($event->getFace());
+		$player = $event->getPlayer();
+		$world = $player->getWorld();
+		$clickVector = $event->getTouchVector();
+
+		$hand = $item->getBlock($face);
+		$hand->position($world, $blockReplace->getPosition()->x, $blockReplace->getPosition()->y, $blockReplace->getPosition()->z);
+
+		if($blockClicked->getTypeId() !== VanillaBlocks::AIR()->getTypeId() && $hand->canBePlacedAt($blockClicked, $clickVector, $face, true)) {
+			$blockReplace = $blockClicked;
+			//TODO: while this mimics the vanilla behaviour with replaceable blocks, we should really pass some other
+			//value like NULL and let place() deal with it. This will look like a bug to anyone who doesn't know about
+			//the vanilla behaviour.
+			$face = Facing::UP;
+			$hand->position($world, $blockReplace->getPosition()->x, $blockReplace->getPosition()->y, $blockReplace->getPosition()->z);
+		}
+
+		$tx = new BlockTransaction($world);
+		if(!$hand->place($tx, $item, $blockReplace, $blockClicked, $face, $clickVector, $player)){
+			return false; // just in case
+		}
+
+        // TODO: this is a hack to prevent block placement when another entity is inside, since this caused ghost blocks
+		foreach($tx->getBlocks() as [$x, $y, $z, $block]){
+			$block->position($this, $x, $y, $z);
+			foreach($block->getCollisionBoxes() as $collisionBox){
+				if(count($collidingEntities = $world->getCollidingEntities($collisionBox)) > 0){
+					if ($collidingEntities !== [$player]){
+						return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
