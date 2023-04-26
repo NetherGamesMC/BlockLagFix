@@ -92,18 +92,19 @@ final class BlockLagFix extends PluginBase{
 				return;
 			}
 
-			$this->lastPlayer = $event->getPlayer();
+            $player = $event->getPlayer();
+			$this->lastPlayer = $player;
 			$clickedBlock = $event->getBlock();
 			$replaceBlock = $clickedBlock->getSide($event->getFace());
 			$this->oldBlocksFullId = [];
 			$this->oldTilesSerializedCompound = [];
-			$saveOldBlock = function(Block $block): void{
+			$saveOldBlock = function(Block $block) use ($player): void{
 				$pos = $block->getPosition();
 				$posIndex = World::blockHash($pos->getFloorX(), $pos->getFloorY(), $pos->getFloorZ());
 				$this->oldBlocksFullId[$posIndex] = $block->getFullId();
 				$tile = $pos->getWorld()->getTileAt($pos->getFloorX(), $pos->getFloorY(), $pos->getFloorZ());
 				if($tile instanceof Spawnable){
-					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound($this->lastPlayer->getNetworkSession()->getProtocolId());
+					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound($player->getNetworkSession()->getProtocolId());
 				}
 			};
 			foreach($clickedBlock->getAllSides() as $block){
