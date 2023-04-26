@@ -103,7 +103,7 @@ final class BlockLagFix extends PluginBase{
 				$this->oldBlocksFullId[$posIndex] = $block->getFullId();
 				$tile = $pos->getWorld()->getTileAt($pos->getFloorX(), $pos->getFloorY(), $pos->getFloorZ());
 				if($tile instanceof Spawnable){
-					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound();
+					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound($this->lastPlayer->getNetworkSession()->getProtocolId());
 				}
 			};
 			foreach($clickedBlock->getAllSides() as $block){
