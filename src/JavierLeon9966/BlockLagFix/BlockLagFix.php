@@ -15,16 +15,13 @@ use pocketmine\event\EventPriority;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\math\Facing;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
+use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\AssumptionFailedError;
-use pocketmine\world\BlockTransaction;
-use pocketmine\world\format\io\GlobalBlockStateHandlers;
 use pocketmine\world\World;
 use function count;
 
@@ -59,10 +56,10 @@ final class BlockLagFix extends PluginBase{
 				return true;
 			}
 			$blockHash = World::blockHash($packet->blockPosition->getX(), $packet->blockPosition->getY(), $packet->blockPosition->getZ());
-			$blockStateData = RuntimeBlockMapping::getInstance($target->getProtocolId())->getBlockStateDictionary()->getDataFromStateId(
-				$packet->blockRuntimeId
-			) ?? throw new AssumptionFailedError('This should never happen');
-			if(GlobalBlockStateHandlers::getDeserializer()->deserialize($blockStateData) !== ($this->oldBlocksFullId[$blockHash] ?? null)){
+			if(!isset($this->oldBlocksFullId[$blockHash])){
+				return true;
+			}
+			if(TypeConverter::getInstance($target->getProtocolId())->getBlockTranslator()->internalIdToNetworkId($this->oldBlocksFullId[$blockHash]) !== $packet->blockRuntimeId){
 				return true;
 			}
 			unset($this->oldBlocksFullId[$blockHash]);
