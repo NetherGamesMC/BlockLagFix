@@ -97,7 +97,7 @@ final class BlockLagFix extends PluginBase{
 				return;
 			}
 
-            $player = $event->getPlayer();
+			$player = $event->getPlayer();
 			$this->lastPlayer = $player;
 			$clickedBlock = $event->getBlock();
 			$replaceBlock = $clickedBlock->getSide($event->getFace());
@@ -130,8 +130,8 @@ final class BlockLagFix extends PluginBase{
 		}, EventPriority::MONITOR, $this, true);
 	}
 
-    private function hasOtherEntityInside(PlayerInteractEvent $event): bool
-    {
+	private function hasOtherEntityInside(PlayerInteractEvent $event): bool
+	{
 		$item = $event->getItem();
 		$face = $event->getFace();
 		$blockClicked = $event->getBlock();
@@ -159,18 +159,18 @@ final class BlockLagFix extends PluginBase{
 			return false; // just in case
 		}
 
-        // TODO: this is a hack to prevent block placement when another entity is inside, since this caused ghost blocks
+		// TODO: this is a hack to prevent block placement when another entity is inside, since this caused ghost blocks
 		foreach($tx->getBlocks() as [$x, $y, $z, $block]){
 			$block->position($world, $x, $y, $z);
 			foreach($block->getCollisionBoxes() as $collisionBox){
 				if(count($collidingEntities = $world->getCollidingEntities($collisionBox)) > 0){
 					if ($collidingEntities !== [$player]){
 						return true;
-                    }
-                }
-            }
-        }
+					}
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }
