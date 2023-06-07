@@ -4,25 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+    "content-hash": "cc9e66e30c0a4118ad4613de8bea3790",
+    "packages": [],
     "packages-dev": [
         {
             "name": "phpstan/extension-installer",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/extension-installer.git",
-                "reference": "f5e02d40f277d28513001976f444d9ff1dc15e9a"
+                "reference": "f45734bfb9984c6c56c4486b71230355f066a58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/f5e02d40f277d28513001976f444d9ff1dc15e9a",
-                "reference": "f5e02d40f277d28513001976f444d9ff1dc15e9a",
+                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/f45734bfb9984c6c56c4486b71230355f066a58a",
+                "reference": "f45734bfb9984c6c56c4486b71230355f066a58a",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.8.0"
+                "phpstan/phpstan": "^1.9.0"
             },
             "require-dev": {
                 "composer/composer": "^2.0",
@@ -31,12 +33,7 @@
             },
             "type": "composer-plugin",
             "extra": {
-                "class": "PHPStan\\ExtensionInstaller\\Plugin",
-                "phpstan/extension-installer": {
-                    "ignore": [
-                        "phpstan/phpstan-phpunit"
-                    ]
-                }
+                "class": "PHPStan\\ExtensionInstaller\\Plugin"
             },
             "autoload": {
                 "psr-4": {
@@ -50,9 +47,9 @@
             "description": "Composer plugin for automatic installation of PHPStan extensions",
             "support": {
                 "issues": "https://github.com/phpstan/extension-installer/issues",
-                "source": "https://github.com/phpstan/extension-installer/tree/1.3.0"
+                "source": "https://github.com/phpstan/extension-installer/tree/1.3.1"
             },
-            "time": "2023-04-18T13:08:02+00:00"
+            "time": "2023-05-24T08:59:17+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -60,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "fb69c96bc94c1c62f849bcb03badc2c485e7c24d"
+                "reference": "f8186b6413ac3c4e366899b20dd0ef57adf2bc9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fb69c96bc94c1c62f849bcb03badc2c485e7c24d",
-                "reference": "fb69c96bc94c1c62f849bcb03badc2c485e7c24d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f8186b6413ac3c4e366899b20dd0ef57adf2bc9b",
+                "reference": "f8186b6413ac3c4e366899b20dd0ef57adf2bc9b",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +112,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-25T14:22:25+00:00"
+            "time": "2023-06-07T16:00:24+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -123,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "1b9b85fe937333254e53bb873ecd3f868afd83db"
+                "reference": "5c143aa605bbf392a90630773618eeaeeac7a49b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/1b9b85fe937333254e53bb873ecd3f868afd83db",
-                "reference": "1b9b85fe937333254e53bb873ecd3f868afd83db",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/5c143aa605bbf392a90630773618eeaeeac7a49b",
+                "reference": "5c143aa605bbf392a90630773618eeaeeac7a49b",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +162,7 @@
                 "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
                 "source": "https://github.com/phpstan/phpstan-strict-rules/tree/1.5.x"
             },
-            "time": "2023-04-24T08:28:43+00:00"
+            "time": "2023-05-25T14:21:39+00:00"
         }
     ],
     "aliases": [],
