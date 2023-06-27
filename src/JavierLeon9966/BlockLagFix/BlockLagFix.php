@@ -9,7 +9,6 @@ use muqsit\simplepackethandler\SimplePacketHandler;
 
 use pocketmine\block\Block;
 use pocketmine\block\tile\Spawnable;
-use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\EventPriority;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -22,6 +21,7 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\world\BlockTransaction;
 use pocketmine\world\World;
 use function count;
 
@@ -106,7 +106,7 @@ final class BlockLagFix extends PluginBase{
 				$this->oldBlocksFullId[$posIndex] = $block->getStateId();
 				$tile = $pos->getWorld()->getTileAt($pos->getFloorX(), $pos->getFloorY(), $pos->getFloorZ());
 				if($tile instanceof Spawnable){
-					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound($player->getNetworkSession()->getProtocolId());
+					$this->oldTilesSerializedCompound[$posIndex] = $tile->getSerializedSpawnCompound($player->getNetworkSession()->getTypeConverter());
 				}
 			};
 			foreach($clickedBlock->getAllSides() as $block){
