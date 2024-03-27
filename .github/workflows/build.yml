@@ -11,24 +11,17 @@ jobs:
     steps:
       - name: Startup
         uses: actions/checkout@v3
-      - name: Checkout PharBuilder
-        uses: actions/checkout@v3
-        with:
-          repository: NetherGamesMC/PharBuilder
-          token: ${{ secrets.ng_token }}
-          path: PharBuilder
-          ref: pm5
       - name: Download PHP Release
-        uses: dsaltares/fetch-gh-release-asset@1.1.0
+        uses: dsaltares/fetch-gh-release-asset@1.1.1
         with:
-          file: Linux.zip
+          file: PHP-Linux-x86_64-PM5.tar.gz
           repo: NetherGamesMC/php-build-scripts
-          version: "tags/8.2-pm5"
+          version: "tags/php-8.3-latest"
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Unpack PHP Release
-        run: unzip Linux.zip && tar -xzvf PHP_Linux-x86_64.tar.gz
+        run: tar -xzvf PHP-Linux-x86_64-PM5.tar.gz
       - name: Download pharbuilder-rs
-        uses: dsaltares/fetch-gh-release-asset@1.1.0
+        uses: dsaltares/fetch-gh-release-asset@1.1.1
         with:
           file: pharbuilder
           repo: NetherGamesMC/pharbuilder-rs
@@ -37,12 +30,10 @@ jobs:
         run: |
           echo Building...
           chmod +x pharbuilder
-          ./pharbuilder -i . -o PharBuilder/BlockLagFix.phar
-          echo Injecting Virions...
-          ./bin/php7/bin/php -dphar.readonly=0 PharBuilder/SimplePacketHandler.phar PharBuilder/BlockLagFix.phar
+          ./pharbuilder -i . -o ./BlockLagFix.phar
           echo Build completed!
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: BlockLagFix
-          path: PharBuilder/BlockLagFix.phar
+          path: BlockLagFix.phar
